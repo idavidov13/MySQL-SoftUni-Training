@@ -39,9 +39,24 @@ REFERENCES towns(id);
 
 // Use only insert SQL queries. Submit your INSERT statements in Judge as Run skeleton, run queries & check DB.
 
+INSERT INTO towns(id, name) 
+VALUES 
+(1, 'Sofia'),
+(2, 'Plovdiv'),
+(3, 'Varna');
+INSERT INTO minions (id, name, age, town_id) 
+VALUES 
+(1, 'Kevin', 22, 1), 
+(2, 'Bob', 15, 3), 
+(3, 'Steward', NULL, 2);
+
+
 
 // 04. Truncate Table Minions - Delete all the data from the minions table using SQL query. Submit your query in Judge as Run skeleton, run
 // queries & check DB.
+
+TRUNCATE table minions;
+
 
 
 // 05. Drop All Tables - Delete all tables from the minions database using SQL query. Submit your query in Judge as Run skeleton, run
@@ -59,6 +74,26 @@ REFERENCES towns(id);
 // • biography – detailed biography of the person it can contain max allowed Unicode characters. (Allow nulls)
 // Make id primary key. Popula
 
+CREATE TABLE people (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(200) NOT NULL,
+    picture BLOB,
+    height DOUBLE(10 , 2 ),
+    weight DOUBLE(10 , 2 ),
+    gender CHAR(1) NOT NULL,
+    birthdate DATE NOT NULL,
+    biography TEXT
+);
+
+insert into people (name, gender, birthdate)
+values
+    ('Ivan', 'm', DATE(now())),
+    ('Pepi', 'f', DATE(now())),
+    ('Anton', 'm', DATE(now())),
+    ('Maya', 'f', DATE(now())),
+    ('Gosho', 'm', DATE(now()));
+
+
 
 // 07. Create Table Users - Using SQL query create table users with columns:
 // • id – unique number for every user. There will be no more than 263-1 users. (Auto incremented)
@@ -68,7 +103,25 @@ REFERENCES towns(id);
 // • last_login_time
 // • is_deleted – shows if the user deleted his/her profile. Possible states are true or false.
 
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(30) NOT NULL,
+    password VARCHAR(26) NOT NULL,
+    profile_picture BLOB,
+    last_login_time DATETIME,
+    is_deleted BOOLEAN
+);
 
+insert into users (username, password)
+values
+    ('test', 'test'),
+    ('test', 'test'),
+    ('test', 'test'),
+    ('test', 'test'),
+    ('test', 'test');
+    
+    
+    
 // 08. Change Primary Key - Using SQL queries modify table users from the previous task. First remove current primary key then create new
 // primary key that would be combination of fields id and username. The initial primary key name on id is pk_users.
 // Submit your query in Judge as Run skeleton, run queries & check DB.
