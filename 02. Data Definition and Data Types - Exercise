@@ -4,14 +4,14 @@ Submit yours create table queries in Judge together for both tables (one after a
 queries & check DB. */
 
 CREATE TABLE minions (
-id INT primary key auto_increment not null,
-name varchar(47),
-age int
+    id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    name VARCHAR(47),
+    age INT
 );
 
 CREATE TABLE towns (
-town_id INT primary key auto_increment,
-name varchar(47)
+    town_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(47)
 );
 
 // 02. Alter Minions Table - Before continuing with the next assignments, rename the town_id to id using Workbench's GUI.
