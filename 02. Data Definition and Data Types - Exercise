@@ -62,6 +62,9 @@ TRUNCATE table minions;
 // 05. Drop All Tables - Delete all tables from the minions database using SQL query. Submit your query in Judge as Run skeleton, run
 // queries & check DB.
 
+DROP TABLE `minions`.`minions`, `minions`.`towns`;
+
+
 
 // 06. Create Table People - Using SQL query create table "people" with columns:
 // • id – unique number for every person there will be no more than 231-1people. (Auto incremented)
@@ -105,7 +108,7 @@ values
 
 CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(30) NOT NULL,
+    username VARCHAR(30) UNIQUE NOT NULL,
     password VARCHAR(26) NOT NULL,
     profile_picture BLOB,
     last_login_time DATETIME,
