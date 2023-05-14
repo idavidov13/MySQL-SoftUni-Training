@@ -234,6 +234,17 @@ FROM employees;
 -- • employees - descending by salary
 -- Submit your query statements as Prepare DB & Run queries.
 
+SELECT *
+FROM towns AS t
+ORDER BY t.name;
+SELECT *
+FROM departments AS d
+ORDER BY d.name;
+SELECT *
+FROM employees AS e
+ORDER BY e.salary DESC;
+
+
 
 -- 16. Basic Select Some Fields - Modify queries from previous problem to show only some of the columns. For table:
 -- • towns – name
@@ -241,6 +252,22 @@ FROM employees;
 -- • employees – first_name, last_name, job_title, salary
 -- Keep the ordering from the previous problem. Submit your query statements as Prepare DB & Run queries.
 
+SELECT t.name
+FROM towns AS t
+ORDER BY t.name;
+SELECT d.name
+FROM departments AS d
+ORDER BY d.name;
+SELECT e.first_name, e.last_name, e.job_title, e.salary
+FROM employees AS e
+ORDER BY e.salary DESC;
+
+
 
 -- 17. Increase Employees Salary - Use softuni database and increase the salary of all employees by 10%. Then select only salary column from the
 -- employees table. Submit your query statements as Prepare DB & Run queries.
+
+UPDATE employees AS e
+SET salary = salary*1.1;
+SELECT salary
+FROM employees;
