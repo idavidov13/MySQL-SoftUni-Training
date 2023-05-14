@@ -173,7 +173,62 @@ username VARCHAR(30) UNIQUE;
 -- are always required and which are optional. Submit your CREATE TABLE and INSERT statements as Run queries &
 -- check DB.
 
-
+CREATE TABLE directors (
+  id INT PRIMARY KEY,
+  director_name VARCHAR(100) NOT NULL,
+  notes VARCHAR(255)
+);
+INSERT INTO directors (id, director_name, notes)
+VALUES
+  (1, 'Christopher Nolan', 'Acclaimed filmmaker known for mind-bending narratives.'),
+  (2, 'Steven Spielberg', 'Renowned director of blockbuster movies.'),
+  (3, 'Quentin Tarantino', 'Master of dialogue and nonlinear storytelling.'),
+  (4, 'Martin Scorsese', 'Iconic director of crime dramas.'),
+  (5, 'Sofia Coppola', 'Award-winning director with a unique artistic style.');
+CREATE TABLE genres (
+  id INT PRIMARY KEY,
+  genre_name VARCHAR(100) NOT NULL,
+  notes VARCHAR(255)
+);
+INSERT INTO genres (id, genre_name, notes)
+VALUES
+  (1, 'Action', 'Movies involving thrilling action sequences.'),
+  (2, 'Drama', 'Character-driven stories with emotional depth.'),
+  (3, 'Comedy', 'Movies that aim to entertain through humor.'),
+  (4, 'Sci-Fi', 'Fictional movies with scientific or futuristic elements.'),
+  (5, 'Romance', 'Movies centered around love and relationships.');
+CREATE TABLE categories (
+  id INT PRIMARY KEY,
+  category_name VARCHAR(100) NOT NULL,
+  notes VARCHAR(255)
+);
+INSERT INTO categories (id, category_name, notes)
+VALUES
+  (1, 'Feature Film', 'Full-length movies intended for theatrical release.'),
+  (2, 'Documentary', 'Non-fictional movies that explore real-life subjects.'),
+  (3, 'Animated', 'Movies featuring animated characters or visuals.'),
+  (4, 'Short Film', 'Brief movies typically less than 40 minutes in length.'),
+  (5, 'Thriller', 'Suspenseful movies that keep audiences on the edge of their seats.');
+CREATE TABLE movies (
+  id INT PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  director_id INT,
+  copyright_year INT,
+  length INT,
+  genre_id INT,
+  category_id INT,
+  rating DECIMAL(3, 1),
+  notes VARCHAR(255)
+);
+INSERT INTO movies (id, title, director_id, copyright_year, length, genre_id, category_id, rating, notes)
+VALUES
+  (1, 'Inception', 1, 2010, 148, 4, 1, 8.8, 'Mind-bending sci-fi heist film.'),
+  (2, 'Jurassic Park', 2, 1993, 127, 1, 1, 8.1, 'Classic dinosaur adventure.'),
+  (3, 'Pulp Fiction', 3, 1994, 154, 2, 1, 8.9, 'Quirky crime anthology.'),
+  (4, 'The Departed', 4, 2006, 151, 5, 1, 8.5, 'Intense undercover cop drama.'),
+  (5, 'Lost in Translation', 5, 2003, 102, 2, 1, 7.7, 'Intense undercover cop drama.');
+  
+  
 
 -- 12. Car Rental Database - Using SQL queries create car_rental database with the following entities:
 -- • categories (id, category, daily_rate, weekly_rate, monthly_rate, weekend_rate)
