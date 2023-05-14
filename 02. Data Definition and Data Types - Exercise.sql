@@ -138,10 +138,23 @@ PRIMARY KEY users(id, username);
 -- 9. Set Default Value of a Field - Using SQL queries modify table users. Make the default value of last_login_time field to be the current time.
 -- Submit your query in Judge as Run skeleton, run queries & check DB.
 
+ALTER TABLE users
+CHANGE COLUMN last_login_time
+last_login_time DATETIME DEFAULT NOW();
+
+
 
 -- 10. Set Unique Field - Using SQL queries modify table users. Remove username field from the primary key so only the field id would be
 -- primary key. Now add unique constraint to the username field. The initial primary key name on (id, username) is
 -- pk_users. Submit your query in Judge as Run skeleton, run queries & check DB.
+
+ALTER TABLE users
+DROP PRIMARY KEY,
+ADD CONSTRAINT pk_users
+PRIMARY KEY users(id),
+CHANGE COLUMN username
+username VARCHAR(30) UNIQUE;
+
 
 
 -- 11. Movies Database - Using SQL queries create Movies database with the following entities:
@@ -159,6 +172,8 @@ PRIMARY KEY users(id, username);
 -- records. Make sure the columns that are present in 2 tables would be of the same data type. Consider which fields
 -- are always required and which are optional. Submit your CREATE TABLE and INSERT statements as Run queries &
 -- check DB.
+
+
 
 -- 12. Car Rental Database - Using SQL queries create car_rental database with the following entities:
 -- • categories (id, category, daily_rate, weekly_rate, monthly_rate, weekend_rate)
@@ -203,6 +218,14 @@ PRIMARY KEY users(id, username);
 -- 14. Basic Select All Fields - Use the soft_uni database and first select all records from the towns, then from departments and finally from
 -- employees table. Use SQL queries and submit them to Judge at once. Submit your query statements as Prepare DB
 -- & Run queries.
+
+SELECT *
+FROM towns;
+SELECT *
+FROM departments;
+SELECT *
+FROM employees;
+
 
 
 -- 15. Basic Select All Fields and Order Them - Modify queries from previous problem by sorting:
