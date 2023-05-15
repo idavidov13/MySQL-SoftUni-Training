@@ -244,6 +244,103 @@ VALUES
 -- are always required and which are optional. Submit your CREATE TABLE and INSERT statements as Run queries &
 -- check DB.
 
+CREATE TABLE categories (
+id INT PRIMARY KEY AUTO_INCREMENT, 
+category VARCHAR(50) NOT NULL, 
+daily_rate VARCHAR(50) NOT NULL, 
+weekly_rate VARCHAR(50) , 
+monthly_rate VARCHAR(50), 
+weekend_rate VARCHAR(50) 
+);
+ 
+INSERT INTO categories (category, daily_rate)
+VALUES ('test', 'test'),
+		('test','test'),
+        ('test','test');
+ 
+CREATE TABLE cars (
+id INT PRIMARY KEY AUTO_INCREMENT, 
+plate_number VARCHAR(50) NOT NULL, 
+make VARCHAR(50) NOT NULL,
+model VARCHAR(50) NOT NULL, 
+car_year YEAR , 
+category_id INT, 
+doors INT, 
+picture BLOB, 
+car_condition VARCHAR(50),
+available BOOLEAN
+);
+ 
+INSERT INTO cars (plate_number, make, model)
+VALUES ('test', 'test','test'),
+		('test','test','test'),
+        ('test','test','test');
+ 
+CREATE TABLE employees (
+id INT PRIMARY KEY AUTO_INCREMENT, 
+first_name VARCHAR(50) NOT NULL, 
+last_name VARCHAR(50) NOT NULL, 
+title VARCHAR(50), 
+notes TEXT
+);
+ 
+INSERT INTO employees (first_name, last_name)
+VALUES ('test', 'test'),
+		('test','test'),
+        ('test','test');
+ 
+CREATE TABLE customers (
+id INT PRIMARY KEY AUTO_INCREMENT, 
+driver_licence_number BOOLEAN NOT NULL, 
+full_name VARCHAR(50) NOT NULL, 
+address VARCHAR(50) NOT NULL, 
+city VARCHAR(50) NOT NULL, 
+zip_code VARCHAR(50), 
+notes TEXT
+);
+ 
+INSERT INTO customers (driver_licence_number,full_name,address,city)
+VALUES (true, 'test','test','test'),
+		(true, 'test','test','test'),
+        (true, 'test','test','test');
+ 
+CREATE TABLE rental_orders (
+id INT PRIMARY KEY AUTO_INCREMENT, 
+employee_id INT NOT NULL, 
+customer_id INT NOT NULL, 
+car_id INT NOT NULL, 
+car_condition VARCHAR(50) NOT NULL, 
+tank_level DOUBLE(6,2) NOT NULL,
+kilometrage_start DOUBLE(12,2) NOT NULL, 
+kilometrage_end DOUBLE(12,2) NOT NULL, 
+total_kilometrage DOUBLE(12,2), 
+start_date DATE NOT NULL, 
+end_date DATE NOT NULL,
+total_days DATE, 
+rate_applied DOUBLE(5,2) NOT NULL, 
+tax_rate VARCHAR(50) NOT NULL, 
+order_status BOOLEAN NOT NULL, 
+notes TEXT
+);
+ 
+INSERT INTO rental_orders 
+(employee_id, 
+customer_id, 
+car_id, 
+car_condition,
+tank_level, 
+kilometrage_start,
+kilometrage_end,
+start_date,
+end_date,
+rate_applied,
+tax_rate,
+order_status)
+VALUES( 1,1,1,'test',12.12,12.12,13.13, '1212-12-12','1212-12-13', 12.12, 'test',true),
+( 1,1,1,'test',12.12,12.12,13.13, '1212-12-12','1212-12-13', 12.12, 'test',true),
+( 1,1,1,'test',12.12,12.12,13.13, '1212-12-12','1212-12-13', 12.12, 'test',true);
+
+
 
 -- 13. Basic Insert - Now create bigger database called soft_uni. You will use database in the future tasks. It should hold information
 -- about
@@ -268,6 +365,27 @@ VALUES
 -- Georgi Terziev Ivanov CEO Sales 09/12/2007 3000.00
 -- Peter Pan Pan Intern Marketing 28/08/2016 599.88
 -- Submit your INSERT queries in Judge as Run skeleton, run queries & check DB.
+
+INSERT INTO towns (name)
+VALUES ('Sofia'),
+        ('Plovdiv'),
+        ('Varna'),
+        ('Burgas');
+ 
+INSERT INTO departments (name)
+VALUES ('Engineering'),
+        ('Sales'),
+         ('Marketing'),
+        ('Software Development'),
+        ('Quality Assurance');
+ 
+INSERT INTO employees (first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+VALUES ('Ivan', 'Ivanov', 'Ivanov', '.NET Developer', 4, '2013-02-01', 3500.00),      
+('Petar', 'Petrov', 'Petrov', 'Senior Engineer', 1, '2004-03-02', 4000.00),
+('Maria', 'Petrova', 'Ivanova', 'Intern', 5, '2016-08-28', 525.25),
+('Georgi', 'Terziev', 'Ivanov', 'CEO', 2, '2007-12-09',3000.00),
+('Peter', 'Pan', 'Pan', 'Intern', 3, '2016-08-28', 599.88);
+
 
 
 -- 14. Basic Select All Fields - Use the soft_uni database and first select all records from the towns, then from departments and finally from
