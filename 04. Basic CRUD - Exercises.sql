@@ -140,54 +140,134 @@ FROM
     employees
 WHERE department_id != 4;
 
-14. Sort Employees Table
-Write a SQL query to sort all records in the еmployees table by the following criteria:
-• First by salary in decreasing order
-• Then by first name alphabetically
-• Then by last name descending
-• Then by middle name alphabetically
-Sort the information by id. Submit your query statements as Prepare DB & run queries.
+-- 14. Sort Employees Table
+-- Write a SQL query to sort all records in the еmployees table by the following criteria:
+-- • First by salary in decreasing order
+-- • Then by first name alphabetically
+-- • Then by last name descending
+-- • Then by middle name alphabetically
+-- Sort the information by id. Submit your query statements as Prepare DB & run queries.
 
-15. Create View Employees with Salaries
-Write a SQL query to create a view v_employees_salaries with first name, last name and salary for each employee.
-Submit your query statements as Run skeleton, run queries & check DB. 
+SELECT 
+    *
+FROM
+    employees
+ORDER BY salary DESC , first_name ASC , last_name DESC , middle_name ASC;
 
-16. Create View Employees with Job Titles
-Write a SQL query to create view v_employees_job_titles with full employee name and job title. When middle
-name is NULL replace it with empty string (''). Submit your query statements as Run skeleton, run queries & check
-DB. 
+-- 15. Create View Employees with Salaries
+-- Write a SQL query to create a view v_employees_salaries with first name, last name and salary for each employee.
+-- Submit your query statements as Run skeleton, run queries & check DB. 
 
-17. Distinct Job Titles
-Write a SQL query to find all distinct job titles. Sort the result by job title alphabetically. Submit your query
-statements as Prepare DB & run queries.
+CREATE VIEW v_employees_salaries AS
+    SELECT 
+        first_name, last_name, salary
+    FROM
+        employees;
+        
+-- 16. Create View Employees with Job Titles
+-- Write a SQL query to create view v_employees_job_titles with full employee name and job title. When middle
+-- name is NULL replace it with empty string (''). Submit your query statements as Run skeleton, run queries & check
+-- DB. 
 
-18. Find First 10 Started Projects
-Write a SQL query to find first 10 started projects. Select all information about them and sort them by start date,
-then by name. Sort the information by id. Submit your query statements as Prepare DB & run queries. 
+CREATE VIEW v_employees_job_titles AS
+    SELECT 
+        CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name,
+        job_title
+    FROM
+        employees;
+        
+-- 17. Distinct Job Titles
+-- Write a SQL query to find all distinct job titles. Sort the result by job title alphabetically. Submit your query
+-- statements as Prepare DB & run queries.
 
-19. Last 7 Hired Employees
-Write a SQL query to find last 7 hired employees. Select their first, last name and their hire date. Submit your query
-statements as Prepare DB & run queries. 
+SELECT DISTINCT
+    job_title
+FROM
+    employees
+ORDER BY job_title;
 
-20. Increase Salaries
-Write a SQL query to increase salaries of all employees that are in the Engineering, Tool Design, Marketing or
-Information Services department by 12%. Then select Salaries column from the Employees table. Submit your
-query statements as Prepare DB & run queries.
+-- 18. Find First 10 Started Projects
+-- Write a SQL query to find first 10 started projects. Select all information about them and sort them by start date,
+-- then by name. Sort the information by id. Submit your query statements as Prepare DB & run queries. 
 
-21. All Mountain Peaks
-Display all mountain peaks in alphabetical order. Submit your query statements as Prepare DB & run queries.
+SELECT 
+    *
+FROM
+    projects
+ORDER BY start_date , name
+LIMIT 10;
 
-22. Biggest Countries by Population
-Find the 30 biggest countries by population from Europe. Display the country name and population. Sort the results
-by population (from biggest to smallest), then by country alphabetically. Submit your query statements as Prepare
-DB & run queries. 
+-- 19. Last 7 Hired Employees
+-- Write a SQL query to find last 7 hired employees. Select their first, last name and their hire date. Submit your query
+-- statements as Prepare DB & run queries. 
 
-23. Countries and Currency (Euro / Not Euro)
-Find all countries along with information about their currency. Display the country name, country code and
-information about its currency: either "Euro" or "Not Euro". Sort the results by country name alphabetically. Submit
-your query statements as Prepare DB & run queries. 
+SELECT 
+    first_name, last_name, hire_date
+FROM
+    employees
+ORDER BY hire_date DESC
+LIMIT 7;
 
-24. All Diablo Characters
-Display the name of all characters in alphabetical order. Submit your query statements as Prepare DB & run
-queries.
+-- 20. Increase Salaries
+-- Write a SQL query to increase salaries of all employees that are in the Engineering, Tool Design, Marketing or
+-- Information Services department by 12%. Then select Salaries column from the Employees table. Submit your
+-- query statements as Prepare DB & run queries.
+
+UPDATE employees AS e 
+SET 
+    salary = salary * 1.12
+WHERE
+    department_id IN (1, 2, 4, 11);
+SELECT 
+    salary
+FROM
+    employees;
+    
+-- 21. All Mountain Peaks
+-- Display all mountain peaks in alphabetical order. Submit your query statements as Prepare DB & run queries.
+
+SELECT 
+    peak_name
+FROM
+    peaks
+ORDER BY peak_name;
+
+-- 22. Biggest Countries by Population
+-- Find the 30 biggest countries by population from Europe. Display the country name and population. Sort the results
+-- by population (from biggest to smallest), then by country alphabetically. Submit your query statements as Prepare
+-- DB & run queries. 
+
+SELECT 
+    country_name, population
+FROM
+    countries
+WHERE
+    continent_code = 'EU'
+ORDER BY population DESC , country_name ASC
+LIMIT 30;
+
+-- 23. Countries and Currency (Euro / Not Euro)
+-- Find all countries along with information about their currency. Display the country name, country code and
+-- information about its currency: either "Euro" or "Not Euro". Sort the results by country name alphabetically. Submit
+-- your query statements as Prepare DB & run queries. 
+
+SELECT 
+    country_name,
+    country_code,
+    IF(currency_code = 'EUR',
+        'Euro',
+        'Not Euro') AS currency
+FROM
+    countries
+ORDER BY country_name ASC;
+
+-- 24. All Diablo Characters
+-- Display the name of all characters in alphabetical order. Submit your query statements as Prepare DB & run
+-- queries.
+
+SELECT 
+    name
+FROM
+    characters
+ORDER BY name ASC;
 
