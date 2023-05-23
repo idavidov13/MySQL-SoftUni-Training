@@ -96,6 +96,14 @@ ORDER BY name;
 -- Write a SQL query to find all towns that do not start with letters R, B or D (case insensitively). Order them
 -- alphabetically by name. Submit your query statements as Prepare DB & run queries.
 
+SELECT 
+    *
+FROM
+    towns
+WHERE
+    name REGEXP '^[^RrBbDd]'
+ORDER BY name;
+
 -- 8. Create View Employees Hired After 2000 Year
 -- Write a SQL query to create view v_employees_hired_after_2000 with the first and the last name of all employees
 -- hired after 2000 year. Select all from the created view. Submit your queries as Run skeleton, run queries & check
