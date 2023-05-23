@@ -82,6 +82,16 @@ ORDER BY name;
 -- Write a SQL query to find all towns that start with letters M, K, B or E (case insensitively). Order them
 -- alphabetically by town name. Submit your query statements as Prepare DB & run queries.
 
+SELECT 
+    *
+FROM
+    towns
+WHERE
+    name LIKE 'M%' OR name LIKE 'K%'
+        OR name LIKE 'B%'
+        OR name LIKE 'E%'
+ORDER BY name;
+
 -- 7. Find Towns Not Starting With
 -- Write a SQL query to find all towns that do not start with letters R, B or D (case insensitively). Order them
 -- alphabetically by name. Submit your query statements as Prepare DB & run queries.
