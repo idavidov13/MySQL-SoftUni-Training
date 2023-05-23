@@ -109,12 +109,43 @@ ORDER BY name;
 -- hired after 2000 year. Select all from the created view. Submit your queries as Run skeleton, run queries & check
 -- DB. 
 
+CREATE VIEW v_employees_hired_after_2000 AS
+    SELECT 
+        first_name, last_name
+    FROM
+        employees
+    WHERE
+        YEAR(hire_date) > 2000;
+        
 -- 9. Length of Last Name
 -- Write a SQL query to find the first and last names of all employees whose last name is exactly 5 characters long.
 
+SELECT 
+    first_name, last_name
+FROM
+    employees
+WHERE
+    CHAR_LENGTH(last_name) = 5;
+    
 -- 10. Countries Holding 'A' 3 or More Times
 -- Find all countries that hold the letter 'A' in their name at least 3 times (case insensitively), sorted by ISO code.
 -- Display the country name and the ISO code. Submit your query statements as Prepare DB & run queries.
+
+SELECT 
+    country_name, iso_code
+FROM
+    countries
+WHERE
+    country_name LIKE '%a%a%a'
+ORDER BY iso_code;
+
+SELECT 
+    country_name, iso_code
+FROM
+    countries
+WHERE
+    (CHAR_LENGTH(country_name) - CHAR_LENGTH(REPLACE(LOWER(country_name), 'a', ''))) >= 3
+ORDER BY iso_code;
 
 -- 11. Mix of Peak and River Names
 -- Combine all peak names with all river names, so that the last letter of each peak name is the same as the first letter
