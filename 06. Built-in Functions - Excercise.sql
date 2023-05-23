@@ -2,23 +2,81 @@
 -- Write a SQL query to find first and last names of all employees whose first name starts with "Sa" (case
 -- insensitively). Order the information by id. Submit your query statements as Prepare DB & run queries.
 
+SELECT 
+    first_name, last_name
+FROM
+    employees
+WHERE
+    first_name LIKE 'sa%'
+ORDER BY employee_id;
+
+-- REGEXP
+SELECT 
+    first_name, last_name
+FROM
+    employees
+WHERE
+    first_name REGEXP '^sa'
+ORDER BY employee_id;
+
 -- 2. Find Names of All Employees by Last Name
 -- Write a SQL query to find first and last names of all employees whose last name contains "ei" (case insensitively).
 -- Order the information by id. Submit your query statements as Prepare DB & run queries
+
+SELECT 
+    first_name, last_name
+FROM
+    employees
+WHERE
+    last_name LIKE '%ei%'
+ORDER BY employee_id;
 
 -- 3. Find First Names of All Employees
 -- Write a SQL query to find the first names of all employees in the departments with ID 3 or 10 and whose hire year is
 -- between 1995 and 2005 inclusively. Order the information by id. Submit your query statements as Prepare DB &
 -- run queries
 
+SELECT 
+    first_name
+FROM
+    employees
+WHERE
+    department_id IN (3 , 10)
+        AND YEAR(hire_date) BETWEEN 1995 AND 2005
+ORDER BY employee_id;
+
 -- 4. Find All Employees Except Engineers
 -- Write a SQL query to find the first and last names of all employees whose job titles does not contain "engineer".
 -- Order the information by id. Submit your query statements as Prepare DB & run queries.
+
+SELECT 
+    first_name, last_name
+FROM
+    employees
+WHERE
+    job_title NOT LIKE '%engineer%'
+ORDER BY employee_id;
 
 -- 5. Find Towns with Name Length
 -- Write a SQL query to find town names that are 5 or 6 symbols long and order them alphabetically by town name.
 -- Submit your query statements as Prepare DB & run queries.
 
+SELECT 
+    name
+FROM
+    towns
+WHERE
+    name LIKE '_____' OR  name LIKE '______'
+ORDER BY name;
+
+-- LENGTH
+SELECT 
+    name
+FROM
+    towns
+WHERE
+    LENGTH(name) = 5 OR LENGTH(name) = 6
+ORDER BY name;
 
 -- 6. Find Towns Starting With
 -- Write a SQL query to find all towns that start with letters M, K, B or E (case insensitively). Order them
