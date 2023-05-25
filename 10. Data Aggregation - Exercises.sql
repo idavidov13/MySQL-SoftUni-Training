@@ -105,14 +105,50 @@ ORDER BY magic_wand_creator ASC , deposit_group ASC;
 -- • Count of wizards in it
 -- Sort result by increasing size of age groups.
 
+SELECT 
+    (CASE
+        WHEN age BETWEEN 0 AND 10 THEN '[0-10]'
+        WHEN age BETWEEN 11 AND 20 THEN '[11-20]'
+        WHEN age BETWEEN 21 AND 30 THEN '[21-30]'
+        WHEN age BETWEEN 31 AND 40 THEN '[31-40]'
+        WHEN age BETWEEN 41 AND 50 THEN '[41-50]'
+        WHEN age BETWEEN 51 AND 60 THEN '[51-60]'
+        WHEN age >= 61 THEN '[61+]'
+    END) AS 'age_group',
+    COUNT(`age`) AS 'wizard_count'
+FROM
+    `wizzard_deposits`
+GROUP BY `age_group`
+ORDER BY `wizard_count`;
+
 -- 10. First Letter
 -- Write a query that returns all unique wizard first letters of their first names only if they have deposit of type Troll
 -- Chest. Order them alphabetically. Use GROUP BY for uniqueness.
+
+SELECT 
+    LEFT(`first_name`, 1) AS 'first_letter'
+FROM
+    wizzard_deposits
+WHERE
+    deposit_group = 'Troll Chest'
+GROUP BY `first_letter`
+ORDER BY `first_letter`;
 
 -- 11. Average Interest
 -- Mr. Bodrog is highly interested in profitability. He wants to know the average interest of all deposits groups split by
 -- whether the deposit has expired or not. But that's not all. He wants you to select deposits with start date after
 -- 01/01/1985. Order the data descending by Deposit Group and ascending by Expiration Flag.
+
+SELECT 
+    deposit_group,
+    is_deposit_expired,
+    AVG(deposit_interest) AS 'average_interest'
+FROM
+    wizzard_deposits
+WHERE
+    deposit_start_date > '1985-01-01'
+GROUP BY deposit_group , is_deposit_expired
+ORDER BY deposit_group DESC , is_deposit_expired ASC;
 
 -- 12. Employees Minimum Salaries
 -- That's it! You no longer work for Mr. Bodrog. You have decided to find a proper job as an analyst in SoftUni.
@@ -122,21 +158,80 @@ ORDER BY magic_wand_creator ASC , deposit_group ASC;
 -- Your query should return:
 -- • department_id
 
+SELECT 
+    department_id, MIN(salary) AS 'minimum_salary'
+FROM
+    employees
+WHERE
+    hire_date > '2000-01-01'
+GROUP BY department_id
+HAVING department_id IN (2 , 5, 7)
+ORDER BY department_id;
+
 -- 13. Employees Average Salaries
 -- Select all high paid employees who earn more than 30000 into a new table. Then delete all high paid employees
 -- who have manager_id = 42 from the new table. Then increase the salaries of all high paid employees with
 -- department_id = 1 with 5000 in the new table. Finally, select the average salaries in each department from the new
 -- table. Sort result by department_id in increasing order.
 
+CREATE TABLE `salary_more_than_30000` AS SELECT * FROM
+    `employees`
+WHERE
+    `salary` > 30000;
+DELETE FROM salary_more_than_30000 
+WHERE
+    manager_id = 42;
+UPDATE salary_more_than_30000 
+SET 
+    salary = salary + 5000
+WHERE
+    department_id = 1;
+SELECT 
+    department_id, AVG(salary) AS 'avg_salary'
+FROM
+    salary_more_than_30000
+GROUP BY department_id
+ORDER BY department_id ASC;
+
 -- 14. Employees Maximum Salaries
 -- Find the max salary for each department. Filter those which have max salaries not in the range 30000 and 70000.
 -- Sort result by department_id in increasing order.
 
+SELECT 
+    department_id, MAX(salary) AS 'max_salary'
+FROM
+    employees
+GROUP BY department_id
+HAVING max_salary NOT BETWEEN 30000 AND 70000
+ORDER BY department_id;
+
 -- 15. Employees Count Salaries
 -- Count the salaries of all employees who don't have a manager. 
 
+SELECT 
+    COUNT(*) AS count
+FROM
+    employees
+WHERE
+    manager_id IS NULL;
+    
 -- 16. 3rd Highest Salary*
 -- Find the third highest salary in each department if there is such. Sort result by department_id in increasing order.
+
+SELECT DISTINCT
+    `department_id`,
+    (SELECT DISTINCT
+            `salary`
+        FROM
+            `employees` e1
+        WHERE
+            e1.`department_id` = `employees`.`department_id`
+        ORDER BY `salary` DESC
+        LIMIT 1 OFFSET 2) AS 'third_highest_salary'
+FROM
+    `employees`
+HAVING `third_highest_salary` IS NOT NULL
+ORDER BY `department_id`;
 
 -- 17. Salary Challenge**
 -- Write a query that returns:
@@ -146,7 +241,28 @@ ORDER BY magic_wand_creator ASC , deposit_group ASC;
 -- for all employees who have salary higher than the average salary of their respective departments. Select only the
 -- first 10 rows. Order by department_id, employee_id.
 
+SELECT 
+    first_name, last_name, department_id
+FROM
+    employees AS e1
+WHERE
+    salary > (SELECT 
+            AVG(salary)
+        FROM
+            employees AS e2
+        WHERE
+            e1.department_id = e2.department_id)
+ORDER BY department_id , employee_id
+LIMIT 10;
+
 -- 18. Departments Total Salaries
 -- Create a query which shows the total sum of salaries for each department. Order by department_id.
 -- Your query should return:
 -- • department_id
+
+SELECT 
+    department_id, SUM(salary) AS 'total_salary'
+FROM
+    employees
+GROUP BY department_id
+ORDER BY department_id;
