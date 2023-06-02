@@ -120,9 +120,80 @@ Insert the data from the example above.
 • The foreign key should be between manager_id and teacher_id.
 Submit your queries by using " MySQL run queries & check DB" strategy.*/
 
+CREATE TABLE `teachers` (
+	`teacher_id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,
+    `name` VARCHAR(30) NOT NULL,
+    `manager_id` INT UNSIGNED DEFAULT NULL
+) AUTO_INCREMENT=101;
+
+INSERT 
+	INTO `teachers`
+		(`name`, `manager_id`)
+    VALUES
+		('John', NULL),
+        ('Maya', 106),
+        ('Silvia', 106),
+        ('Ted', 105),
+        ('Mark', 101),
+        ('Greta', 101);
+
+ALTER TABLE `teachers`
+	ADD CONSTRAINT `pk_teachers` 
+		PRIMARY KEY (`teacher_id`),
+	ADD CONSTRAINT `fk_teacher_manager_id`
+		FOREIGN KEY (`manager_id`)
+        REFERENCES `teachers`(`teacher_id`);
+	
 /*5. Online Store Database
 Create a new database and design the following structure:
 Submit your queries by using "MySQL run queries & check DB" strategy.*/
+
+CREATE TABLE `item_types` (
+	`item_type_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE `items` (
+	`item_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL,
+    `item_type_id` INT NOT NULL,
+    CONSTRAINT `fk_items_item_types` 
+		FOREIGN KEY (`item_type_id`) 
+        REFERENCES `item_types` (`item_type_id`)
+);
+
+CREATE TABLE `cities` (
+	`city_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE `customers` (
+	`customer_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `name` VARCHAR(50) NOT NULL,
+    `birthday` DATE,
+    `city_id` INT NOT NULL,
+    CONSTRAINT `fk_customers_cities` 
+		FOREIGN KEY (`city_id`) 
+        REFERENCES `cities` (`city_id`)
+);
+
+CREATE TABLE `orders` (
+	`order_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `customer_id` INT NOT NULL,
+    CONSTRAINT `fk_orders_customers` 
+		FOREIGN KEY (`customer_id`) 
+        REFERENCES `customers` (`customer_id`)
+);
+
+CREATE TABLE `order_items` (
+    `order_id` INT NOT NULL,
+    `item_id` INT NOT NULL,
+    CONSTRAINT `pk_order_items` PRIMARY KEY (`order_id` , `item_id`),
+    CONSTRAINT `fk_order_items_orders` FOREIGN KEY (`order_id`)
+        REFERENCES `orders` (`order_id`),
+    CONSTRAINT `fk_order_items_items` FOREIGN KEY (`item_id`)
+        REFERENCES `items` (`item_id`)
+);
 
 /*6. University Database
 Create a new database and design the following structure:
@@ -167,8 +238,12 @@ Create an E/R Diagram of the SoftUni Database. There are some special relations 
 are self-referenced (manager_id) and departments have One-to-One with the employees (manager_id) while the
 employees have One-to-Many (department_id). You might find it interesting how it looks on а diagram.*/
 
+E/R Diagram
+
 /*8. Geography Design
 Create an E/R Diagram of the Geography Database.*/
+
+E/R Diagram
 
 /*9. Peaks in Rila
 Display all peaks for "Rila" mountain_range. Include:
