@@ -172,12 +172,60 @@ extremely careful to achieve the desired precision!
  Follow us: Page 5 of 6
 Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
 
+CREATE FUNCTION ufn_calculate_future_value(initial_sum DECIMAL(19, 4), interest_rate DECIMAL(19, 4), number_of_years INT)
+RETURNS DECIMAL(19, 4)
+RETURN initial_sum*POW((1+interest_rate), number_of_years);
+
+CREATE PROCEDURE usp_calculate_future_value_for_account(
+    account_id INT, interest_rate DECIMAL(19, 4))
+BEGIN
+    SELECT 
+         a.id AS 'account_id', h.first_name, h.last_name, a.balance AS 'current_balance',
+         ufn_calculate_future_value(a.balance, interest_rate, 5) AS 'balance_in_5_years'
+    FROM
+        `account_holders` AS h
+            JOIN
+        `accounts` AS a ON h.id=a.account_holder_id
+    WHERE a.id = account_id;
+END
+
 /* 12. Deposit Money
 Add stored procedure usp_deposit_money(account_id, money_amount) that operate in transactions.
 Make sure to guarantee valid positive money_amount with precision up to fourth sign after decimal point. The
 procedure should produce exact results working with the specified precision.
 Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
 
+CREATE PROCEDURE usp_deposit_money(
+    account_id INT, money_amount DECIMAL(19, 4))
+BEGIN
+    IF money_amount > 0 THEN
+        START TRANSACTION;
+        
+        UPDATE `accounts` AS a 
+        SET 
+            a.balance = a.balance + money_amount
+        WHERE
+            a.id = account_id;
+        
+        IF (SELECT a.balance 
+            FROM `accounts` AS a 
+            WHERE a.id = account_id) < 0
+            THEN ROLLBACK;
+        ELSE
+            COMMIT;
+        END IF;
+    END IF;
+END
+
+CALL usp_deposit_money(1, 10);
+
+SELECT 
+    a.id AS 'account_id', a.account_holder_id, a.balance
+FROM
+    `accounts` AS a
+WHERE
+    a.id = 1;
+    
 /* 13. Withdraw Money
 Add stored procedures usp_withdraw_money(account_id, money_amount) that operate in transactions.
 Make sure to guarantee withdraw is done only when balance is enough and money_amount is valid positive
