@@ -175,7 +175,6 @@ Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
 CREATE FUNCTION ufn_calculate_future_value(initial_sum DECIMAL(19, 4), interest_rate DECIMAL(19, 4), number_of_years INT)
 RETURNS DECIMAL(19, 4)
 RETURN initial_sum*POW((1+interest_rate), number_of_years);
-
 CREATE PROCEDURE usp_calculate_future_value_for_account(
     account_id INT, interest_rate DECIMAL(19, 4))
 BEGIN
@@ -216,15 +215,6 @@ BEGIN
         END IF;
     END IF;
 END
-
-CALL usp_deposit_money(1, 10);
-
-SELECT 
-    a.id AS 'account_id', a.account_holder_id, a.balance
-FROM
-    `accounts` AS a
-WHERE
-    a.id = 1;
     
 /* 13. Withdraw Money
 Add stored procedures usp_withdraw_money(account_id, money_amount) that operate in transactions.
@@ -232,6 +222,28 @@ Make sure to guarantee withdraw is done only when balance is enough and money_am
 number. Work with precision up to fourth sign after decimal point. The procedure should produce exact results
 working with the specified precision.
 Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
+
+CREATE PROCEDURE usp_withdraw_money(
+    account_id INT, money_amount DECIMAL(19, 4))
+BEGIN
+    IF money_amount > 0 THEN
+        START TRANSACTION;
+        
+        UPDATE `accounts` AS a 
+        SET 
+            a.balance = a.balance - money_amount
+        WHERE
+            a.id = account_id;
+        
+        IF (SELECT a.balance 
+            FROM `accounts` AS a 
+            WHERE a.id = account_id) < 0
+            THEN ROLLBACK;
+        ELSE
+            COMMIT;
+        END IF;
+    END IF;
+END
 
 /* 14. Money Transfer
 Write stored procedure usp_transfer_money(from_account_id, to_account_id, amount) that
@@ -242,10 +254,67 @@ database.
 Make sure to guarantee exact results working with precision up to fourth sign after decimal point.
 Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
 
+CREATE PROCEDURE usp_transfer_money(
+    from_account_id INT, to_account_id INT, money_amount DECIMAL(19, 4))
+BEGIN
+    IF money_amount > 0 
+        AND from_account_id <> to_account_id 
+        AND (SELECT a.id 
+            FROM `accounts` AS a 
+            WHERE a.id = to_account_id) IS NOT NULL
+        AND (SELECT a.id 
+            FROM `accounts` AS a 
+            WHERE a.id = from_account_id) IS NOT NULL
+        AND (SELECT a.balance 
+            FROM `accounts` AS a 
+            WHERE a.id = from_account_id) >= money_amount
+    THEN
+        START TRANSACTION;
+        
+        UPDATE `accounts` AS a 
+        SET 
+            a.balance = a.balance + money_amount
+        WHERE
+            a.id = to_account_id;
+            
+        UPDATE `accounts` AS a 
+        SET 
+            a.balance = a.balance - money_amount
+        WHERE
+            a.id = from_account_id;
+        
+        IF (SELECT a.balance 
+            FROM `accounts` AS a 
+            WHERE a.id = from_account_id) < 0
+            THEN ROLLBACK;
+        ELSE
+            COMMIT;
+        END IF;
+    END IF;
+END
+
 /* 15. Log Accounts Trigger
 Create another table – logs(log_id, account_id, old_sum, new_sum). Add a trigger to the accounts
 table that enters a new entry into the logs table every time the sum on an account changes.
 Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
+
+CREATE TABLE `logs` (
+    log_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    account_id INT(11) NOT NULL,
+    old_sum DECIMAL(19, 4) NOT NULL,
+    new_sum DECIMAL(19, 4) NOT NULL
+);
+
+CREATE TRIGGER `tr_balance_updated`
+AFTER UPDATE ON `accounts`
+FOR EACH ROW
+BEGIN
+    IF OLD.balance <> NEW.balance THEN
+        INSERT INTO `logs` 
+            (`account_id`, `old_sum`, `new_sum`)
+        VALUES (OLD.id, OLD.balance, NEW.balance);
+    END IF;
+END
 
 /* 16. Emails Trigger
 Create another table – notification_emails(id, recipient, subject, body). Add a trigger to logs table
@@ -256,4 +325,40 @@ each email:
 • body - "On {date (current date)} your balance was changed from {old} to {new}."
 Submit your query statement as Run skeleton, run queries & check DB in Judge.*/
 
+CREATE TABLE `logs` (
+    log_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    account_id INT(11) NOT NULL,
+    old_sum DECIMAL(19, 4) NOT NULL,
+    new_sum DECIMAL(19, 4) NOT NULL
+);
 
+CREATE TRIGGER `tr_balance_updated`
+AFTER UPDATE ON `accounts`
+FOR EACH ROW
+BEGIN
+    IF OLD.balance <> NEW.balance THEN
+        INSERT INTO `logs` 
+            (`account_id`, `old_sum`, `new_sum`)
+        VALUES (OLD.id, OLD.balance, NEW.balance);
+    END IF;
+END;
+
+CREATE TABLE `notification_emails` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `recipient` INT NOT NULL,
+    `subject` VARCHAR(100) NOT NULL,
+    `body` TEXT NOT NULL
+);
+
+CREATE TRIGGER `tr_notification_emails_creation`
+AFTER INSERT 
+ON `logs`
+FOR EACH ROW
+BEGIN
+    INSERT INTO `notification_emails` 
+        (`recipient`, `subject`, `body`)
+    VALUES (
+        NEW.account_id, 
+        CONCAT('Balance change for account: ', NEW.account_id), 
+        CONCAT('On ', DATE_FORMAT(NOW(), '%b %d %Y at %r'), ' your balance was changed from ', NEW.old_sum, ' to ', NEW.new_sum));
+END;
